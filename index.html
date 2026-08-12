@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Remote appliance diagnosis and technical guidance from a qualified technician." />
+    <title>Online Appliance Support | Remote Appliance Diagnosis</title>
+    <style>
+      :root {
+        --ink: #10243b;
+        --muted: #5a697a;
+        --line: #dce5ed;
+        --soft: #f3f7fa;
+        --blue: #0969da;
+        --blue-dark: #0759b8;
+        --green: #0f766e;
+        --white: #ffffff;
+        --radius: 18px;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { margin: 0; color: var(--ink); background: var(--white); font: 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      a { color: inherit; text-decoration: none; }
+      .wrap { width: min(1120px, calc(100% - 40px)); margin: auto; }
+      header { border-bottom: 1px solid var(--line); background: rgba(255,255,255,.96); position: sticky; top: 0; z-index: 5; }
+      .nav { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.5px; font-size: 20px; }
+      .mark { width: 34px; height: 34px; display: grid; place-items: center; background: var(--blue); color: white; border-radius: 10px; font-size: 18px; }
+      .navlinks { display: flex; align-items: center; gap: 23px; color: var(--muted); font-size: 14px; }
+      .header-actions { display: flex; align-items: center; gap: 10px; }
+      .language-switch { display: inline-flex; padding: 3px; border: 1px solid var(--line); border-radius: 9px; background: var(--soft); }
+      .language-switch button { display: inline-flex; align-items: center; gap: 5px; min-height: 30px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); font: 800 12px/1 inherit; cursor: pointer; }
+      .language-switch .flag { font-size: 15px; line-height: 1; }
+      .language-switch button.active { background: white; color: var(--ink); box-shadow: 0 1px 3px rgba(16,36,59,.12); }
+      .button { display: inline-flex; justify-content: center; align-items: center; min-height: 47px; padding: 0 20px; border-radius: 10px; background: var(--blue); color: white; font-weight: 700; border: 0; cursor: pointer; transition: .2s; }
+      .button:hover { background: var(--blue-dark); transform: translateY(-1px); }
+      .button.ghost { background: white; border: 1px solid var(--line); color: var(--ink); }
+      .hero { background: linear-gradient(122deg, #eef7ff 0%, #f9fcff 53%, #e8f5f3 100%); padding: 80px 0 72px; }
+      .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; gap: 60px; }
+      .eyebrow { color: var(--green); text-transform: uppercase; letter-spacing: .1em; font-size: 12px; font-weight: 800; }
+      h1 { margin: 12px 0 18px; font-size: clamp(40px, 6vw, 66px); line-height: 1.04; letter-spacing: -2.7px; max-width: 730px; }
+      .lead { max-width: 610px; color: var(--muted); font-size: 19px; }
+      .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+      .notice { display: flex; align-items: center; gap: 9px; margin-top: 22px; color: var(--muted); font-size: 14px; }
+      .shield { color: var(--green); font-weight: 800; }
+      .panel { padding: 28px; border-radius: var(--radius); background: var(--white); box-shadow: 0 20px 48px rgba(32, 80, 117, .12); border: 1px solid #e6edf2; }
+      .panel h2 { margin: 0 0 4px; font-size: 22px; letter-spacing: -.5px; }
+      .panel p { margin: 0 0 20px; color: var(--muted); font-size: 14px; }
+      .select-label { display: block; margin: 16px 0 7px; font-size: 13px; font-weight: 750; }
+      select { width: 100%; min-height: 48px; padding: 0 13px; border: 1px solid #bdcad6; border-radius: 9px; background: white; color: var(--ink); font: inherit; }
+      .panel .button { width: 100%; margin-top: 20px; }
+      .identity-step { display: none; margin-top: 20px; padding-top: 4px; }
+      .identity-step.visible { display: block; }
+      .field-help { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
+      input, textarea { width: 100%; min-height: 48px; padding: 11px 13px; border: 1px solid #bdcad6; border-radius: 9px; background: white; color: var(--ink); font: inherit; }
+      textarea { min-height: 92px; resize: vertical; }
+      .required { color: #b42318; }
+      .case-summary { display: none; margin-top: 16px; padding: 15px; background: var(--soft); border: 1px solid var(--line); border-radius: 10px; font-size: 13px; }
+      .case-summary.visible { display: block; }
+      .case-summary strong { display: block; margin-bottom: 5px; }
+      .purpose { background: #fff; }
+      .purpose-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 42px; align-items: start; }
+      .check-list { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 13px; }
+      .check-list li { display: flex; gap: 10px; color: var(--muted); }
+      .check-list b { color: var(--ink); }
+      .check { color: var(--green); font-weight: 900; }
+      .safety-note { padding: 24px; border: 1px solid #f0d9a5; border-radius: 14px; background: #fffaf0; }
+      .safety-note h3 { margin: 0 0 8px; }
+      .safety-note p { margin: 0; color: var(--muted); }
+      section { padding: 80px 0; }
+      .section-heading { max-width: 670px; }
+      h2 { margin: 8px 0 12px; font-size: clamp(28px, 4vw, 40px); line-height: 1.15; letter-spacing: -1.25px; }
+      .section-heading p { color: var(--muted); font-size: 17px; }
+      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 32px; }
+      .card { border: 1px solid var(--line); padding: 24px; border-radius: 14px; background: white; }
+      .support-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; }
+      .icon { width: 44px; height: 44px; display: grid; place-items: center; background: var(--soft); border-radius: 12px; font-size: 23px; }
+      .card h3 { margin: 16px 0 7px; font-size: 18px; }
+      .card p { margin: 0; color: var(--muted); font-size: 14px; }
+      .steps { background: var(--soft); }
+      .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; margin-top: 38px; }
+      .step-number { color: var(--blue); font-size: 13px; font-weight: 800; letter-spacing: .08em; }
+      .step h3 { margin: 7px 0; font-size: 19px; }
+      .step p { margin: 0; color: var(--muted); }
+      .support-box { margin-top: 34px; padding: 27px; border: 1px solid #bcd9d5; background: #f3fbfa; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+      .support-box h3 { margin: 0 0 4px; }
+      .support-box p { margin: 0; color: var(--muted); }
+      .price { margin: 10px 0 8px; color: var(--blue); font-weight: 850; font-size: 24px; letter-spacing: -.6px; }
+      .route-button { width: 100%; margin-top: 20px; }
+      .coming-soon-card { position: relative; background: #fbfcfd; }
+      .coming-soon-badge { display: inline-flex; margin-bottom: 12px; padding: 5px 9px; border-radius: 999px; background: #fff3d9; color: #905d00; font-size: 11px; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+      .button:disabled { background: #aebdca; cursor: not-allowed; transform: none; }
+      .payment-stage { display: none; margin-top: 28px; padding: 28px; border: 1px solid #bcd9d5; border-radius: 14px; background: #f3fbfa; }
+      .payment-stage.visible { display: block; }
+      .payment-stage h3 { margin: 0 0 8px; }
+      .payment-stage p { margin: 0 0 16px; color: var(--muted); }
+      footer { background: var(--ink); color: #eaf2f9; padding: 36px 0; }
+      .footer-row { display: flex; justify-content: space-between; gap: 20px; align-items: center; }
+      .footer-row small { color: #b7c7d6; }
+      @media (max-width: 760px) {
+        .navlinks { display: none; }
+        .hero { padding: 55px 0; }
+        .hero-grid, .purpose-grid, .grid, .steps-grid { grid-template-columns: 1fr; gap: 20px; }
+        h1 { letter-spacing: -1.8px; }
+        .support-box, .footer-row { align-items: flex-start; flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap nav">
+        <a class="brand" href="#top"><span class="mark">⌁</span> Online Appliance Support</a>
+        <nav class="navlinks" aria-label="Main navigation">
+          <a href="#how-it-works" data-i18n="navHow">How it works</a>
+          <a href="#appliances" data-i18n="navAppliances">Appliances</a>
+          <a href="#support" data-i18n="navSupport">Support options</a>
+        </nav>
+        <div class="header-actions">
+          <div class="language-switch" role="group" aria-label="Language selection">
+            <button type="button" class="active" data-language="en" aria-pressed="true" aria-label="Switch to English"><span class="flag" aria-hidden="true">🇬🇧</span><span>English</span></button>
+            <button type="button" data-language="el" aria-pressed="false" aria-label="Αλλαγή στα Ελληνικά"><span class="flag" aria-hidden="true">🇬🇷</span><span>Ελληνικά</span></button>
+          </div>
+          <a class="button" href="#start" data-i18n="getStarted">Get started</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div>
+            <div class="eyebrow" data-i18n="heroEyebrow">Remote appliance diagnosis</div>
+            <h1 data-i18n="heroTitle">Understand your appliance problem before you pay for a repair.</h1>
+            <p class="lead" data-i18n="heroLead">Get remote diagnosis, error-code guidance, safe troubleshooting, and a clearer decision on whether your appliance is worth repairing.</p>
+            <div class="hero-actions">
+              <a class="button" href="#start" data-i18n="startCheck">Start appliance check</a>
+              <a class="button ghost" href="#how-it-works" data-i18n="seeHow">See how it works</a>
+            </div>
+            <div class="notice"><span class="shield">●</span> <span data-i18n="notice">Clear advice, safe checks, and no unnecessary call-outs.</span></div>
+          </div>
+          <aside class="panel" id="start">
+            <h2 data-i18n="formTitle">Start your appliance check</h2>
+            <p data-i18n="formLead">Tell us what you have. We will guide you to the right support option.</p>
+            <label class="select-label" for="appliance" data-i18n="applianceType">Appliance type</label>
+            <select id="appliance" name="appliance">
+              <option value="" data-i18n="chooseAppliance">Choose an appliance</option>
+              <option>Washing machine</option>
+              <option>Dryer</option>
+              <option>Refrigerator / freezer</option>
+              <option>Oven / cooker</option>
+              <option>Dishwasher</option>
+              <option>Air conditioning</option>
+            </select>
+            <label class="select-label" for="brand" data-i18n="brand">Brand</label>
+            <select id="brand" name="brand" disabled>
+              <option value="" data-i18n="chooseApplianceFirst">Choose an appliance first</option>
+            </select>
+            <div class="identity-step" id="identity-step" aria-live="polite">
+              <label class="select-label" for="model"><span data-i18n="modelCode">Model / product code</span></label>
+              <input id="model" name="model" autocomplete="off" placeholder="Enter exactly as shown on the rating plate" data-i18n-placeholder="modelPlaceholder" />
+              <p class="field-help" data-i18n="modelHelp">Usually found inside the door, behind a flap, on the side, or at the rear of the appliance. If you cannot find it, we can help in the live chat.</p>
+
+              <label class="select-label" for="serial" data-i18n="serialNumber">Serial number</label>
+              <input id="serial" name="serial" autocomplete="off" placeholder="If available" data-i18n-placeholder="ifAvailable" />
+
+              <label class="select-label" for="manufacturer-id" id="manufacturer-id-label">Manufacturer identifier</label>
+              <input id="manufacturer-id" name="manufacturer-id" autocomplete="off" placeholder="If shown on the rating plate" />
+              <p class="field-help" id="manufacturer-id-help">Add any product, service, or technical number printed on the rating plate.</p>
+
+              <label class="select-label" for="customer-name"><span data-i18n="customerName">Full name</span> <span class="required">*</span></label>
+              <input id="customer-name" name="customer-name" autocomplete="name" placeholder="Enter your full name" data-i18n-placeholder="namePlaceholder" />
+
+              <label class="select-label" for="customer-email"><span data-i18n="customerEmail">Email address</span> <span class="required">*</span></label>
+              <input id="customer-email" name="customer-email" type="email" autocomplete="email" placeholder="Enter your email address" data-i18n-placeholder="emailPlaceholder" />
+
+              <label class="select-label" for="fault"><span data-i18n="faultLabel">What is the problem?</span> <span class="required">*</span></label>
+              <textarea id="fault" name="fault" placeholder="Describe the fault, error code, and when it happens" data-i18n-placeholder="faultPlaceholder"></textarea>
+              <div class="case-summary" id="case-summary"></div>
+              <button class="button" type="button" id="continue-button" data-i18n="continueSupport">Continue to support options</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="purpose" id="purpose">
+        <div class="wrap purpose-grid">
+          <div>
+            <div class="eyebrow" data-i18n="purposeEyebrow">What we do</div>
+            <h2 data-i18n="purposeTitle">Clear technical guidance before you spend money on a repair.</h2>
+            <p class="lead" data-i18n="purposeLead">Share your appliance details, symptoms, and any error code. We help you understand the likely fault and the safest next step through clear remote guidance.</p>
+            <ul class="check-list">
+              <li><span class="check">✓</span><span><b data-i18n="faultGuideTitle">Fault and error-code guidance</b><br><span data-i18n="faultGuideCopy">We break down what the information points to and what it may mean for the appliance.</span></span></li>
+              <li><span class="check">✓</span><span><b data-i18n="safeChecksTitle">Safe model-specific checks</b><br><span data-i18n="safeChecksCopy">Where appropriate, we guide basic checks, resets, and available diagnostic or test modes.</span></span></li>
+              <li><span class="check">✓</span><span><b data-i18n="repairDecisionTitle">Repair-value decision</b><br><span data-i18n="repairDecisionCopy">We help you decide whether repair is likely worthwhile based on the information available.</span></span></li>
+              <li><span class="check">✓</span><span><b data-i18n="partsTitle">Parts guidance</b><br><span data-i18n="partsCopy">When relevant, we explain likely parts and compare indicative prices for genuine and compatible replacement parts.</span></span></li>
+            </ul>
+          </div>
+          <aside class="safety-note">
+            <div class="eyebrow" data-i18n="safetyEyebrow">Safety first</div>
+            <h3 data-i18n="safetyTitle">Remote guidance has clear limits.</h3>
+            <p data-i18n="safetyCopy">We do not instruct customers to carry out hazardous electrical, gas, sealed refrigeration-system, or other unsafe work.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section id="appliances">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="eyebrow" data-i18n="applianceEyebrow">Start with the right appliance</div>
+            <h2 data-i18n="applianceTitle">Focused support for the appliances people depend on every day.</h2>
+            <p data-i18n="applianceLead">Choose your appliance and brand, then continue to the support option that suits your case.</p>
+          </div>
+          <div class="grid">
+            <article class="card"><div class="icon">◌</div><h3 data-i18n="washingMachines">Washing machines</h3><p data-i18n="washingCopy">Drainage, spinning, water intake, error codes, noise, and door-lock faults.</p></article>
+            <article class="card"><div class="icon">▤</div><h3 data-i18n="dryers">Dryers</h3><p data-i18n="dryersCopy">Heating, drying performance, drum movement, noise, error codes, and filter-related faults.</p></article>
+            <article class="card"><div class="icon">❄</div><h3 data-i18n="fridges">Refrigerators & freezers</h3><p data-i18n="fridgesCopy">Cooling performance, frost, leaks, unusual sounds, and display warnings.</p></article>
+            <article class="card"><div class="icon">♨</div><h3 data-i18n="ovens">Ovens & cookers</h3><p data-i18n="ovensCopy">Heating, temperature, fan, controls, and safe initial fault checks.</p></article>
+            <article class="card"><div class="icon">◫</div><h3 data-i18n="dishwashers">Dishwashers</h3><p data-i18n="dishwashersCopy">Washing performance, drainage, leaks, error codes, noise, and control faults.</p></article>
+            <article class="card"><div class="icon">◌</div><h3 data-i18n="airConditioning">Air conditioning</h3><p data-i18n="airCopy">Cooling performance, airflow, error codes, unusual sounds, and safe initial checks.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="steps" id="how-it-works">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="eyebrow" data-i18n="stepsEyebrow">A simple support route</div>
+            <h2 data-i18n="stepsTitle">From appliance fault to a clear next step.</h2>
+          </div>
+          <div class="steps-grid">
+            <div class="step"><div class="step-number" data-i18n="step1Number">01 — SELECT</div><h3 data-i18n="step1Title">Choose appliance and brand</h3><p data-i18n="step1Copy">We check whether your brand is currently in our supported-service coverage.</p></div>
+            <div class="step"><div class="step-number" data-i18n="step2Number">02 — IDENTIFY</div><h3 data-i18n="step2Title">Enter the appliance details</h3><p data-i18n="step2Copy">Share the model, serial number, manufacturer identifier, error code, and symptoms.</p></div>
+            <div class="step"><div class="step-number" data-i18n="step3Number">03 — GET GUIDANCE</div><h3 data-i18n="step3Title">Choose live chat support</h3><p data-i18n="step3Copy">Choose live chat for your fault. Your case number is issued after secure payment.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="support">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="eyebrow" data-i18n="supportEyebrow">Support options</div>
+            <h2 data-i18n="supportTitle">Choose the level of help your fault needs.</h2>
+          </div>
+          <div class="grid support-grid">
+            <article class="card"><div class="icon">◍</div><h3 data-i18n="chatDiagnosis">Live chat diagnosis</h3><div class="price">€8</div><p data-i18n="chatCopy">One support case, with up to 48 hours to continue the same conversation by chat.</p><button class="button route-button" type="button" data-service="Live chat diagnosis" data-price="€8" data-i18n="chooseChat">Choose live chat</button></article>
+            <article class="card coming-soon-card"><span class="coming-soon-badge" data-i18n="comingSoon">Coming soon</span><div class="icon">▣</div><h3 data-i18n="videoDiagnosis">Video diagnosis</h3><div class="price">€15</div><p data-i18n="videoCopy">Video-call diagnosis will be available soon. Live chat support is available now.</p><button class="button route-button" type="button" disabled data-i18n="videoComingSoon">Video diagnosis coming soon</button></article>
+          </div>
+          <div class="payment-stage" id="payment-stage" aria-live="polite">
+            <h3 id="payment-title">Continue with your support request</h3>
+            <p id="payment-copy">Complete your appliance details first, then choose a support option.</p>
+            <button class="button" id="payment-button" type="button" data-i18n="proceedPayment">Proceed to secure payment</button>
+            <p class="field-help" data-i18n="previewOnly">Preview only: payment, case-number creation, and CRM connection will be activated in the next build stage.</p>
+          </div>
+          <div class="support-box">
+            <div><h3 data-i18n="readyTitle">Ready to begin?</h3><p data-i18n="readyCopy">Choose your appliance and brand to see your support route.</p></div>
+            <a class="button" href="#start" data-i18n="startCheck">Start appliance check</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap footer-row">
+        <div class="brand"><span class="mark">⌁</span> Online Appliance Support</div>
+        <small data-i18n="footerCopy">Remote appliance diagnosis and technical guidance. Safety and service terms will appear here before launch.</small>
+      </div>
+    </footer>
+    <script>
+      const greek = {
+        navHow: "Πώς λειτουργεί", navAppliances: "Συσκευές", navSupport: "Επιλογές υποστήριξης", getStarted: "Ξεκινήστε",
+        heroEyebrow: "Απομακρυσμένη διάγνωση συσκευών", heroTitle: "Κατανοήστε το πρόβλημα της συσκευής σας πριν πληρώσετε για επισκευή.",
+        heroLead: "Λάβετε απομακρυσμένη διάγνωση, καθοδήγηση για κωδικούς σφάλματος, ασφαλή έλεγχο βλαβών και μια καθαρότερη εικόνα για το αν αξίζει η επισκευή.",
+        startCheck: "Ξεκινήστε τον έλεγχο", seeHow: "Δείτε πώς λειτουργεί", notice: "Καθαρές συμβουλές, ασφαλείς έλεγχοι και χωρίς περιττές επισκέψεις.",
+        formTitle: "Ξεκινήστε τον έλεγχο της συσκευής σας", formLead: "Πείτε μας ποια συσκευή έχετε. Θα σας καθοδηγήσουμε στη σωστή επιλογή υποστήριξης.",
+        applianceType: "Τύπος συσκευής", chooseAppliance: "Επιλέξτε συσκευή", chooseBrand: "Επιλέξτε μάρκα", brandListSoon: "Η λίστα μαρκών θα είναι σύντομα διαθέσιμη", otherBrand: "Άλλη / δεν αναφέρεται", brand: "Μάρκα", chooseApplianceFirst: "Επιλέξτε πρώτα συσκευή", identifierGeneric: "Αναγνωριστικός αριθμός κατασκευαστή (αν υπάρχει)", identifierGenericHelp: "Προσθέστε οποιονδήποτε αριθμό προϊόντος, service, PNC, E-Nr ή τεχνικό αριθμό αναγράφεται στην πινακίδα.",
+        modelCode: "Μοντέλο / κωδικός προϊόντος", modelPlaceholder: "Γράψτε το ακριβώς όπως αναγράφεται στην πινακίδα", modelHelp: "Συνήθως βρίσκεται μέσα στην πόρτα, πίσω από κάλυμμα, στο πλάι ή στο πίσω μέρος της συσκευής. Αν δεν μπορείτε να το βρείτε, μπορούμε να βοηθήσουμε στο live chat.", customerName: "Ονοματεπώνυμο", namePlaceholder: "Γράψτε το ονοματεπώνυμό σας", customerEmail: "Διεύθυνση email", emailPlaceholder: "Γράψτε τη διεύθυνση email σας",
+        serialNumber: "Αριθμός σειράς", ifAvailable: "Αν υπάρχει", faultLabel: "Ποιο είναι το πρόβλημα;", faultPlaceholder: "Περιγράψτε τη βλάβη, τον κωδικό σφάλματος και πότε εμφανίζεται", continueSupport: "Συνέχεια στις επιλογές υποστήριξης",
+        purposeEyebrow: "Τι κάνουμε", purposeTitle: "Σαφής τεχνική καθοδήγηση πριν ξοδέψετε χρήματα για επισκευή.", purposeLead: "Μοιραστείτε τα στοιχεία της συσκευής, τα συμπτώματα και τυχόν κωδικό σφάλματος. Σας βοηθούμε να κατανοήσετε την πιθανή βλάβη και το ασφαλέστερο επόμενο βήμα μέσω ξεκάθαρης απομακρυσμένης καθοδήγησης.",
+        faultGuideTitle: "Καθοδήγηση για βλάβες και κωδικούς σφάλματος", faultGuideCopy: "Αναλύουμε τι δείχνουν τα στοιχεία και τι μπορεί να σημαίνουν για τη συσκευή.",
+        safeChecksTitle: "Ασφαλείς έλεγχοι ανά μοντέλο", safeChecksCopy: "Όπου είναι κατάλληλο, καθοδηγούμε βασικούς ελέγχους, επαναφορές και διαθέσιμες διαγνωστικές ή δοκιμαστικές λειτουργίες.",
+        repairDecisionTitle: "Απόφαση για το αν αξίζει η επισκευή", repairDecisionCopy: "Σας βοηθούμε να κρίνετε αν η επισκευή πιθανόν αξίζει, με βάση τα διαθέσιμα στοιχεία.",
+        partsTitle: "Καθοδήγηση για ανταλλακτικά", partsCopy: "Όταν χρειάζεται, εξηγούμε ποια ανταλλακτικά είναι πιθανά και συγκρίνουμε ενδεικτικές τιμές για γνήσια και συμβατά ανταλλακτικά.",
+        safetyEyebrow: "Ασφάλεια πρώτα", safetyTitle: "Η απομακρυσμένη καθοδήγηση έχει σαφή όρια.", safetyCopy: "Δεν καθοδηγούμε πελάτες να εκτελούν επικίνδυνες ηλεκτρικές εργασίες, εργασίες αερίου, κλειστών κυκλωμάτων ψύξης ή άλλες μη ασφαλείς εργασίες.",
+        applianceEyebrow: "Ξεκινήστε με τη σωστή συσκευή", applianceTitle: "Στοχευμένη υποστήριξη για τις συσκευές που χρειάζεστε καθημερινά.", applianceLead: "Επιλέξτε τη συσκευή και τη μάρκα σας και έπειτα συνεχίστε στην επιλογή υποστήριξης που ταιριάζει στην υπόθεσή σας.",
+        washingMachines: "Πλυντήρια ρούχων", washingCopy: "Αποστράγγιση, στύψιμο, εισαγωγή νερού, κωδικοί σφάλματος, θόρυβος και βλάβες κλειδώματος πόρτας.", dryers: "Στεγνωτήρια", dryersCopy: "Θέρμανση, απόδοση στεγνώματος, κίνηση κάδου, θόρυβος, κωδικοί σφάλματος και βλάβες σχετικές με τα φίλτρα.",
+        fridges: "Ψυγεία και καταψύκτες", fridgesCopy: "Απόδοση ψύξης, πάγος, διαρροές, ασυνήθιστοι ήχοι και ενδείξεις στην οθόνη.",
+        ovens: "Φούρνοι και κουζίνες", ovensCopy: "Θέρμανση, θερμοκρασία, ανεμιστήρας, χειριστήρια και ασφαλείς αρχικοί έλεγχοι βλάβης.",
+        dishwashers: "Πλυντήρια πιάτων", dishwashersCopy: "Απόδοση πλύσης, αποστράγγιση, διαρροές, κωδικοί σφάλματος, θόρυβος και βλάβες χειριστηρίων.",
+        airConditioning: "Κλιματισμός", airCopy: "Απόδοση ψύξης, ροή αέρα, κωδικοί σφάλματος, ασυνήθιστοι ήχοι και ασφαλείς αρχικοί έλεγχοι.",
+        stepsEyebrow: "Μια απλή διαδρομή υποστήριξης", stepsTitle: "Από τη βλάβη της συσκευής στο ξεκάθαρο επόμενο βήμα.",
+        step1Number: "01 — ΕΠΙΛΟΓΗ", step1Title: "Επιλέξτε συσκευή και μάρκα", step1Copy: "Ελέγχουμε αν η μάρκα σας καλύπτεται αυτή τη στιγμή από την υπηρεσία μας.",
+        step2Number: "02 — ΤΑΥΤΟΠΟΙΗΣΗ", step2Title: "Συμπληρώστε τα στοιχεία της συσκευής", step2Copy: "Δώστε το μοντέλο, τον αριθμό σειράς, τον αριθμό κατασκευαστή, τον κωδικό σφάλματος και τα συμπτώματα.",
+        step3Number: "03 — ΚΑΘΟΔΗΓΗΣΗ", step3Title: "Επιλέξτε υποστήριξη με live chat", step3Copy: "Επιλέξτε live chat για τη βλάβη σας. Ο αριθμός υπόθεσης εκδίδεται μετά την ασφαλή πληρωμή.",
+        supportEyebrow: "Επιλογές υποστήριξης", supportTitle: "Επιλέξτε το επίπεδο βοήθειας που χρειάζεται η βλάβη σας.",
+        chatDiagnosis: "Διάγνωση με ζωντανή συνομιλία", chatCopy: "Μία υπόθεση υποστήριξης, με έως 48 ώρες για να συνεχίσετε την ίδια συνομιλία μέσω chat.", chooseChat: "Επιλέξτε live chat",
+        comingSoon: "Σύντομα διαθέσιμο", videoDiagnosis: "Διάγνωση με βιντεοκλήση", videoCopy: "Η διάγνωση μέσω βιντεοκλήσης θα είναι σύντομα διαθέσιμη. Το live chat είναι διαθέσιμο τώρα.", videoComingSoon: "Η διάγνωση με βίντεο είναι σύντομα διαθέσιμη",
+        proceedPayment: "Συνέχεια σε ασφαλή πληρωμή", previewOnly: "Μόνο προεπισκόπηση: η πληρωμή, η δημιουργία αριθμού υπόθεσης και η σύνδεση με CRM θα ενεργοποιηθούν στο επόμενο στάδιο.",
+        readyTitle: "Έτοιμοι να ξεκινήσετε;", readyCopy: "Επιλέξτε τη συσκευή και τη μάρκα σας για να δείτε τη διαδρομή υποστήριξης.", footerCopy: "Απομακρυσμένη διάγνωση συσκευών και τεχνική καθοδήγηση. Οι όροι ασφάλειας και υπηρεσίας θα εμφανιστούν εδώ πριν από την έναρξη."
+      };
+      const englishText = {};
+      document.querySelectorAll("[data-i18n]").forEach((node) => { englishText[node.dataset.i18n] = node.textContent; });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => { englishText[node.dataset.i18nPlaceholder] = node.placeholder; });
+      Object.assign(englishText, {
+        chooseBrand: "Choose a brand", brandListSoon: "Brand list coming soon", otherBrand: "Other / not listed",
+        identifierGeneric: "Manufacturer identifier (if shown)", identifierGenericHelp: "Add any product, service, PNC, E-Nr, or technical number printed on the rating plate."
+      });
+      let currentLanguage = "en";
+      const textFor = (key) => currentLanguage === "el" ? (greek[key] || englishText[key] || key) : (englishText[key] || key);
+      const applianceNames = {
+        "Washing machine": "Πλυντήριο ρούχων", "Dryer": "Στεγνωτήριο", "Refrigerator / freezer": "Ψυγείο / καταψύκτης",
+        "Oven / cooker": "Φούρνος / κουζίνα", "Dishwasher": "Πλυντήριο πιάτων", "Air conditioning": "Κλιματισμός"
+      };
+
+      function applyLanguage(language) {
+        currentLanguage = language;
+        document.documentElement.lang = language === "el" ? "el" : "en";
+        document.querySelectorAll("[data-i18n]").forEach((node) => { node.textContent = textFor(node.dataset.i18n); });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => { node.placeholder = textFor(node.dataset.i18nPlaceholder); });
+        applianceSelect.querySelectorAll("option[value]").forEach((option) => {
+          if (option.value && applianceNames[option.value]) option.textContent = language === "el" ? applianceNames[option.value] : option.value;
+        });
+        document.querySelectorAll("[data-language]").forEach((button) => {
+          const active = button.dataset.language === language;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+        setIdentifierGuide();
+        if (!applianceSelect.value) brandSelect.options[0].textContent = textFor("chooseApplianceFirst");
+        localStorage.setItem("onlineApplianceSupportLanguage", language);
+      }
+
+      document.querySelectorAll("[data-language]").forEach((button) => {
+        button.addEventListener("click", () => applyLanguage(button.dataset.language));
+      });
+      // Supported-brand data: appliance routes will be added one appliance at a time.
+      const supportedBrands = {
+        "Washing machine": [
+          "AEG", "Beko", "Bosch", "Brandt", "Candy", "Electrolux",
+          "Fourlis", "General Electric", "Hoover", "Ariston", "Indesit",
+          "Inventor", "LG", "Samsung", "Sharp", "Siemens", "Whirlpool",
+          "Zanussi", "Smeg", "Miele"
+        ],
+        "Dryer": [
+          "AEG", "Amica", "Beko", "Blomberg", "Bosch", "Brandt", "Candy",
+          "Davoline", "Electrolux", "Gorenje", "Haier", "Heinner", "Hisense",
+          "Hoover", "Indesit", "LG", "Midea", "Miele", "Morris", "Pitsos",
+          "Samsung", "Siemens", "Smeg", "Toshiba", "Whirlpool", "Zanussi"
+        ],
+        "Refrigerator / freezer": [
+          "AEG", "Admiral", "Amana", "Ariston", "Beko", "Bowman",
+          "Bosch", "Brandt", "Candy", "Crown", "Daewoo", "Electrolux",
+          "Eskimo", "Frigidaire", "Gaggenau", "General Electric", "Gorenje",
+          "Haier", "Hisense", "Hitachi", "Hoover", "Hotpoint", "Hyundai",
+          "Ignis", "Indesit", "Inventor", "Isola", "Kenmore", "LG",
+          "Liebherr", "Maytag", "Midea", "Miele", "Morris", "Neff",
+          "Philco", "San Giorgio", "Samsung", "Sharp", "Siemens", "Smeg",
+          "TCL United", "Telefunken", "Westinghouse", "Whirlpool", "Zanussi"
+        ],
+        "Air conditioning": [
+          "AEG", "Airwell", "AUX", "Beko", "Bosch", "Carrier", "Hunter",
+          "Daewoo", "Daikin", "Davoline", "Eskimo", "FNU", "Felix",
+          "Fuji Electric", "Fujitsu", "General", "General Electric", "Gree",
+          "Haier", "Hisense", "Hitachi", "Hyundai", "Inverter", "Izola",
+          "Juro Pro", "Kerosun", "LG", "Midea", "Mitsubishi Electric",
+          "Mitsubishi Heavy Industries", "Morris", "Neoclima", "Olimpia Splendid",
+          "Panasonic", "Pitsos", "Ronshen", "Samsung", "Sharp", "Skyline",
+          "TCL", "Tesla", "Toshiba", "Toyotomi", "United", "Whirlpool",
+          "Xiaomi", "York"
+        ],
+        "Oven / cooker": [
+          "AEG", "Ariston", "Beko", "Bloomberg", "Bosch", "Brandt",
+          "Candy", "Daewoo", "Devilleine", "Electrolux", "Eskimo", "Fagor",
+          "Giranja", "Hotpoint", "Indesit", "LG", "Miele", "Morris", "Neff",
+          "Bitzos", "Samsung", "Simmons", "Smeg", "Teka", "United",
+          "Whirlpool", "Zanussi"
+        ],
+        "Dishwasher": [
+          "AEG", "Ariston", "Beko", "Blomberg", "Bosch", "Brandt", "Candy",
+          "Carad", "Daewoo", "De’Longhi", "Electrolux", "Eskimo", "Franke",
+          "Gaggenau", "General Electric", "Hisense", "Hotpoint", "Ignis",
+          "Indesit", "Izola", "Korting", "Küppersbusch", "LG", "Midea",
+          "Miele", "Morris", "Pitsos", "Samsung", "Sharp", "Siemens", "Smeg",
+          "Teka", "United", "Whirlpool", "Zanussi"
+        ]
+      };
+
+      const applianceSelect = document.getElementById("appliance");
+      const brandSelect = document.getElementById("brand");
+      const identityStep = document.getElementById("identity-step");
+      const manufacturerIdLabel = document.getElementById("manufacturer-id-label");
+      const manufacturerId = document.getElementById("manufacturer-id");
+      const manufacturerIdHelp = document.getElementById("manufacturer-id-help");
+      const caseSummary = document.getElementById("case-summary");
+
+      const identifierGuides = {
+        "AEG": { label: "PNC / product number", help: "For many AEG appliances, enter the PNC or product number from the rating plate." },
+        "Electrolux": { label: "PNC / product number", help: "For many Electrolux appliances, enter the PNC or product number from the rating plate." },
+        "Zanussi": { label: "PNC / product number", help: "For many Zanussi appliances, enter the PNC or product number from the rating plate." },
+        "Bosch": { label: "E-Nr", help: "Enter the E-Nr exactly as shown on the rating plate. Add FD in the serial-number field if shown." },
+        "Siemens": { label: "E-Nr", help: "Enter the E-Nr exactly as shown on the rating plate. Add FD in the serial-number field if shown." },
+        "Neff": { label: "E-Nr", help: "Enter the E-Nr exactly as shown on the rating plate. Add FD in the serial-number field if shown." },
+        "Gaggenau": { label: "E-Nr", help: "Enter the E-Nr exactly as shown on the rating plate. Add FD in the serial-number field if shown." },
+        "Whirlpool": { label: "Service number / 12NC", help: "Enter the service number or 12NC if it appears on the rating plate." },
+        "Indesit": { label: "Service number / 12NC", help: "Enter the service number or 12NC if it appears on the rating plate." },
+        "Hotpoint": { label: "Service number / 12NC", help: "Enter the service number or 12NC if it appears on the rating plate." },
+        "Ignis": { label: "Service number / 12NC", help: "Enter the service number or 12NC if it appears on the rating plate." },
+        "Miele": { label: "Model / serial number", help: "Enter the model and serial number exactly as shown on the rating plate." }
+      };
+      const greekIdentifierGuides = {
+        "AEG": { label: "PNC / αριθμός προϊόντος", help: "Για πολλές συσκευές AEG, γράψτε τον PNC ή τον αριθμό προϊόντος από την πινακίδα." },
+        "Electrolux": { label: "PNC / αριθμός προϊόντος", help: "Για πολλές συσκευές Electrolux, γράψτε τον PNC ή τον αριθμό προϊόντος από την πινακίδα." },
+        "Zanussi": { label: "PNC / αριθμός προϊόντος", help: "Για πολλές συσκευές Zanussi, γράψτε τον PNC ή τον αριθμό προϊόντος από την πινακίδα." },
+        "Bosch": { label: "E-Nr", help: "Γράψτε τον E-Nr ακριβώς όπως αναγράφεται στην πινακίδα. Προσθέστε το FD στο πεδίο αριθμού σειράς, αν υπάρχει." },
+        "Siemens": { label: "E-Nr", help: "Γράψτε τον E-Nr ακριβώς όπως αναγράφεται στην πινακίδα. Προσθέστε το FD στο πεδίο αριθμού σειράς, αν υπάρχει." },
+        "Neff": { label: "E-Nr", help: "Γράψτε τον E-Nr ακριβώς όπως αναγράφεται στην πινακίδα. Προσθέστε το FD στο πεδίο αριθμού σειράς, αν υπάρχει." },
+        "Gaggenau": { label: "E-Nr", help: "Γράψτε τον E-Nr ακριβώς όπως αναγράφεται στην πινακίδα. Προσθέστε το FD στο πεδίο αριθμού σειράς, αν υπάρχει." },
+        "Whirlpool": { label: "Αριθμός service / 12NC", help: "Γράψτε τον αριθμό service ή 12NC, αν αναγράφεται στην πινακίδα." },
+        "Indesit": { label: "Αριθμός service / 12NC", help: "Γράψτε τον αριθμό service ή 12NC, αν αναγράφεται στην πινακίδα." },
+        "Hotpoint": { label: "Αριθμός service / 12NC", help: "Γράψτε τον αριθμό service ή 12NC, αν αναγράφεται στην πινακίδα." },
+        "Ignis": { label: "Αριθμός service / 12NC", help: "Γράψτε τον αριθμό service ή 12NC, αν αναγράφεται στην πινακίδα." },
+        "Miele": { label: "Μοντέλο / αριθμός σειράς", help: "Γράψτε το μοντέλο και τον αριθμό σειράς ακριβώς όπως αναγράφονται στην πινακίδα." }
+      };
+
+      function setIdentifierGuide() {
+        const guide = (currentLanguage === "el" ? greekIdentifierGuides : identifierGuides)[brandSelect.value] || {
+          label: textFor("identifierGeneric"),
+          help: textFor("identifierGenericHelp")
+        };
+        manufacturerIdLabel.textContent = guide.label;
+        manufacturerId.placeholder = guide.label;
+        manufacturerIdHelp.textContent = guide.help;
+      }
+
+      applianceSelect.addEventListener("change", () => {
+        const brands = supportedBrands[applianceSelect.value] || [];
+        brandSelect.innerHTML = "";
+        brandSelect.disabled = !applianceSelect.value;
+
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = applianceSelect.value
+          ? (brands.length ? textFor("chooseBrand") : textFor("brandListSoon"))
+          : textFor("chooseApplianceFirst");
+        brandSelect.appendChild(placeholder);
+
+        brands.forEach((brand) => {
+          const option = document.createElement("option");
+          option.value = brand;
+          option.textContent = brand;
+          brandSelect.appendChild(option);
+        });
+
+        if (applianceSelect.value) {
+          const other = document.createElement("option");
+          other.value = "Other / not listed";
+          other.textContent = textFor("otherBrand");
+          brandSelect.appendChild(other);
+        }
+        identityStep.classList.remove("visible");
+        caseSummary.classList.remove("visible");
+      });
+
+      brandSelect.addEventListener("change", () => {
+        if (!brandSelect.value) {
+          identityStep.classList.remove("visible");
+          return;
+        }
+        setIdentifierGuide();
+        identityStep.classList.add("visible");
+      });
+
+      document.getElementById("continue-button").addEventListener("click", () => {
+        const model = document.getElementById("model").value.trim();
+        const customerName = document.getElementById("customer-name").value.trim();
+        const customerEmail = document.getElementById("customer-email").value.trim();
+        const fault = document.getElementById("fault").value.trim();
+        if (!customerName || !customerEmail || !fault) {
+          caseSummary.innerHTML = "<strong>Please complete the required details.</strong> Your name, email address, and fault description are needed before continuing.";
+          caseSummary.classList.add("visible");
+          return;
+        }
+        const caseData = {
+          appliance: applianceSelect.value,
+          brand: brandSelect.value,
+          model,
+          customerName,
+          customerEmail,
+          serialNumber: document.getElementById("serial").value.trim(),
+          manufacturerIdentifier: manufacturerId.value.trim(),
+          fault
+        };
+        sessionStorage.setItem("onlineApplianceSupportCase", JSON.stringify(caseData));
+        caseSummary.innerHTML = `<strong>Appliance details saved for this support request.</strong>${caseData.appliance} · ${caseData.brand}${caseData.model ? ` · ${caseData.model}` : ""}<br>Next, choose live chat support.`;
+        caseSummary.classList.add("visible");
+        document.getElementById("support").scrollIntoView({ behavior: "smooth" });
+      });
+
+      const paymentStage = document.getElementById("payment-stage");
+      const paymentTitle = document.getElementById("payment-title");
+      const paymentCopy = document.getElementById("payment-copy");
+      document.querySelectorAll("[data-service]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const caseData = JSON.parse(sessionStorage.getItem("onlineApplianceSupportCase") || "null");
+          if (!caseData) {
+            document.getElementById("start").scrollIntoView({ behavior: "smooth" });
+            caseSummary.innerHTML = "<strong>Complete your appliance details first.</strong> We need these details to create the correct support case.";
+            caseSummary.classList.add("visible");
+            return;
+          }
+          const service = button.dataset.service;
+          const price = button.dataset.price;
+          sessionStorage.setItem("onlineApplianceSupportService", JSON.stringify({ service, price }));
+          paymentTitle.textContent = `${service} — ${price}`;
+          paymentCopy.textContent = `Your appliance details are ready. After secure payment, a case number will be created and sent with your support instructions.`;
+          paymentStage.classList.add("visible");
+          paymentStage.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+      });
+
+      document.getElementById("payment-button").addEventListener("click", () => {
+        alert("Preview only: this button will open secure payment once Stripe and the CRM case workflow are connected.");
+      });
+
+      applyLanguage(localStorage.getItem("onlineApplianceSupportLanguage") === "el" ? "el" : "en");
+    </script>
+  </body>
+</html>
