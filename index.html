@@ -523,5 +523,29 @@
 
       applyLanguage(localStorage.getItem("onlineApplianceSupportLanguage") === "el" ? "el" : "en");
     </script>
+    <script>
+  const applianceImages = [
+    "ChatGPT Image Aug 15, 2026, 05_48_41 PM (1).png",
+    "ChatGPT Image Aug 15, 2026, 05_48_42 PM (2).png",
+    "ChatGPT Image Aug 15, 2026, 05_48_42 PM (3).png",
+    "ChatGPT Image Aug 15, 2026, 05_48_42 PM (4).png",
+    "ChatGPT Image Aug 15, 2026, 05_48_42 PM (5).png",
+    "ChatGPT Image Aug 15, 2026, 05_48_43 PM (6).png"
+  ];
+
+  document.querySelectorAll("#appliances .card").forEach((card, index) => {
+    const icon = card.querySelector(".icon");
+    if (!icon || !applianceImages[index]) return;
+
+    const image = document.createElement("img");
+    image.src = encodeURI(applianceImages[index]);
+    image.alt = card.querySelector("h3")?.textContent || "Appliance";
+    image.style.cssText =
+      "display:block;width:100%;height:150px;object-fit:contain;" +
+      "margin:0 0 14px;";
+
+    icon.replaceWith(image);
+  });
+</script>
   </body>
 </html>
